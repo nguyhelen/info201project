@@ -5,3 +5,16 @@ date: "2025-02-19"
 output: html_document
 ---
 Is this thing working???
+
+```{r}
+#Loading Data
+
+HF_rec <- read.csv("C:/Users/tejas/OneDrive/Desktop/info201project/heart_failure_clinical_records_dataset.csv")
+
+head(HF_rec,5)
+
+Diet_data <- read.csv("C:/Users/tejas/OneDrive/Desktop/info201project/Dietary Habits Survey Data.csv")
+
+head(Diet_data, 1)
+
+```
