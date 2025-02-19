@@ -36,8 +36,11 @@ heart <- heart %>%
          diabetes = ifelse(diabetes == 1, "yes", "no"))
 heart
 
+```
+```{r}
 
-
+summary(heart$age)
 
 ```
+The minimum age is 40, maximum is 95.
 
