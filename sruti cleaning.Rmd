@@ -36,8 +36,7 @@ heart <- heart %>%
          diabetes = ifelse(diabetes == 1, "yes", "no"))
 heart
 
-
-
-
 ```
+
+
 
