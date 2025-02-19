@@ -14,5 +14,9 @@ library(readr)
 dietHabits <- read_delim("Dietary Habits Survey Data.csv")
 
 dietHabits <- dietHabits %>%
-  select(Age, Gender, Diet Type, Weekly food intake [Sweet foods], Weekly food intake [Salty foods])
+  select(Age, Gender, DietType, Weekly_food_intake_Sweet_foods, Weekly_food_intake_Salty_foods) %>%
+  filter(Age == "35-44" | Age == "45-54" | Age == "55-64" | Age == "Above 65")
+head(dietHabits)
+
+
 ```
