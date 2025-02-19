@@ -1,0 +1,18 @@
+---
+title: "Diet-Type cleaning"
+author: "Helen Nguyen"
+date: "2025-02-19"
+output: html_document
+---
+
+```{r}
+library(dplyr)
+library(readr)
+```
+
+```{r}
+dietHabits <- read_delim("Dietary Habits Survey Data.csv")
+
+dietHabits <- dietHabits %>%
+  select(Age, Gender, Diet Type, Weekly food intake [Sweet foods], Weekly food intake [Salty foods])
+```
