@@ -1,0 +1,43 @@
+---
+title: "sruti cleaning"
+author: "sruti"
+date: "2025-02-19"
+output: html_document
+---
+
+```{r}
+
+library(tidyverse)
+
+```
+
+
+```{r}
+
+heart <- read_delim("heart_failure_clinical_records_dataset.csv")
+head(heart, 5)
+
+```
+
+```{r}
+
+heart <- heart %>% 
+  select(age, diabetes, serum_creatinine, serum_sodium, sex, DEATH_EVENT)
+
+head(heart, 5)
+
+```
+
+```{r}
+
+heart <- heart %>% 
+  mutate(sex = ifelse(sex==1, "MALE", "FEMALE"),
+         DEATH_EVENT = ifelse(DEATH_EVENT==1, "yes", "no"),
+         diabetes = ifelse(diabetes == 1, "yes", "no"))
+heart
+
+
+
+
+```
+
