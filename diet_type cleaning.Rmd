@@ -18,5 +18,5 @@ dietHabits <- dietHabits %>%
   filter(Age == "35-44" | Age == "45-54" | Age == "55-64" | Age == "Above 65")
 head(dietHabits)
 
-
+sum(is.na(dietHabits)) ## output is 0
 ```
