@@ -34,7 +34,7 @@ heart <- heart %>%
   mutate(sex = ifelse(sex==1, "MALE", "FEMALE"),
          DEATH_EVENT = ifelse(DEATH_EVENT==1, "yes", "no"),
          diabetes = ifelse(diabetes == 1, "yes", "no"),
-         high_blood_pressure = ifelse)
+         high_blood_pressure = ifelse(high_blood_pressure == 1, "yes", "no"))
 heart
 
 
