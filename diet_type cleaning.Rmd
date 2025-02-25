@@ -19,6 +19,8 @@ dietHabits <- dietHabits %>%
 head(dietHabits)
 
 sum(is.na(dietHabits)) ## output is 0
+
+
 ```
 
 ```{r}
