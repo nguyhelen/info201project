@@ -37,9 +37,19 @@ heart <- heart %>%
   mutate(sex = ifelse(sex==1, "Male", "Female"),
          DEATH_EVENT = ifelse(DEATH_EVENT==1, "yes", "no"),
          diabetes = ifelse(diabetes == 1, "yes", "no"),
+<<<<<<< HEAD
          high_blood_pressure = ifelse(high_blood_pressure == 1, "yes", "no"))
   
 names(heart)[names(heart) == "sex"] <- "Gender" 
+=======
+         high_blood_pressure = ifelse(high_blood_pressure == 1, "yes", "no"),
+         age = ifelse(age >= 35 & age <= 44, "35-44", 
+         ifelse(age >= 45 & age <= 54, "45-54", 
+                ifelse(age >= 55 & age <= 64, "55-64", "Above 65")
+                )
+         )
+         )
+>>>>>>> 005f582a7c50d7710479057e99ade79af5530149
 heart
 ```
 
