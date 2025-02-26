@@ -51,7 +51,7 @@ heart
 ```
 
 ```{r}
-merge_data <- merge(dietHabits, heart, by = "Age", all = TRUE)
+merge_data <- merge(dietHabits, heart, by = c("Age", "Gender"), all = TRUE)
 merge_data
 ```
 
