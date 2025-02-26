@@ -43,6 +43,7 @@ heart <- heart %>%
                 )
          )
          )
+names(heart)[names(heart) == "sex"] <- "Gender"
 heart
 
 
