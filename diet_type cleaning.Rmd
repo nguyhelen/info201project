@@ -24,7 +24,7 @@ sum(is.na(dietHabits)) ## output is 0
 
 ```
 
-
+```{r}
 heart <- read_delim("heart_failure_clinical_records_dataset.csv")
 head(heart, 5)
 
@@ -34,10 +34,12 @@ heart <- heart %>%
 head(heart, 5)
 
 heart <- heart %>% 
-  mutate(sex = ifelse(sex==1, "MALE", "FEMALE"),
+  mutate(sex = ifelse(sex==1, "Male", "Female"),
          DEATH_EVENT = ifelse(DEATH_EVENT==1, "yes", "no"),
          diabetes = ifelse(diabetes == 1, "yes", "no"),
          high_blood_pressure = ifelse(high_blood_pressure == 1, "yes", "no"))
+  
+names(heart)[names(heart) == "sex"] <- "Gender" 
 heart
 ```
 
