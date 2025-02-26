@@ -380,7 +380,10 @@ display: none;
 <pre class="r"><code>dietHabits &lt;- dietHabits %&gt;%
   select(Age, Gender, DietType, Weekly_food_intake_Sweet_foods, Weekly_food_intake_Salty_foods) %&gt;%
   filter(Age == &quot;35-44&quot; | Age == &quot;45-54&quot; | Age == &quot;55-64&quot; | Age == &quot;Above 65&quot;)
-head(dietHabits)</code></pre>
+
+  unique(dietHabits$Age)</code></pre>
+<pre><code>## [1] &quot;45-54&quot;    &quot;Above 65&quot; &quot;35-44&quot;</code></pre>
+<pre class="r"><code>head(dietHabits)</code></pre>
 <pre><code>## # A tibble: 6 × 5
 ##   Age      Gender DietType         Weekly_food_intake_S…¹ Weekly_food_intake_S…²
 ##   &lt;chr&gt;    &lt;chr&gt;  &lt;chr&gt;            &lt;chr&gt;                  &lt;chr&gt;                 
@@ -394,6 +397,15 @@ head(dietHabits)</code></pre>
 ## #   ²​Weekly_food_intake_Salty_foods</code></pre>
 <pre class="r"><code>sum(is.na(dietHabits)) ## output is 0</code></pre>
 <pre><code>## [1] 0</code></pre>
+<p>heart &lt;- read_delim(“heart_failure_clinical_records_dataset.csv”)
+head(heart, 5)</p>
+<p>heart &lt;- heart %&gt;% select(age, diabetes, high_blood_pressure,
+sex, DEATH_EVENT)</p>
+<p>head(heart, 5)</p>
+<p>heart &lt;- heart %&gt;% mutate(sex = ifelse(sex==1, “MALE”,
+“FEMALE”), DEATH_EVENT = ifelse(DEATH_EVENT==1, “yes”, “no”), diabetes =
+ifelse(diabetes == 1, “yes”, “no”), high_blood_pressure = ifelse) heart
+```</p>
 
 
 
