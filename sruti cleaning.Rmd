@@ -6,9 +6,7 @@ output: html_document
 ---
 
 ```{r}
-
 library(tidyverse)
-
 ```
 
 
@@ -16,14 +14,11 @@ library(tidyverse)
 
 heart <- read_delim("heart_failure_clinical_records_dataset.csv")
 head(heart, 5)
-
 ```
 
 ```{r}
-
 heart <- heart %>% 
   select(age, diabetes, serum_creatinine, serum_sodium, sex, DEATH_EVENT)
-
 head(heart, 5)
 
 ```

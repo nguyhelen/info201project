@@ -6,13 +6,17 @@ output: html_document
 ---
 Is this thing working???
 
+### 1. Loading Data
 ```{r}
-#Loading Data
+library(tidyverse)
+HF_rec <- read_csv("heart_failure_clinical_records_dataset.csv")
+Diet_data <- read_csv("Dietary Habits Survey Data.csv")
 
-HF_rec <- read.csv("heart_failure_clinical_records_dataset.csv")
-head(HF_rec,5)
+```
 
-Diet_data <- read.csv("Dietary Habits Survey Data.csv")
-head(Diet_data, 1)
+### 2. Check for Missing values
+```{r}
+glimpse(HF_rec)
+glimpse(Diet_data)
 
 ```

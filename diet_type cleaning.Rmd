@@ -16,12 +16,14 @@ dietHabits <- read_delim("Dietary Habits Survey Data.csv")
 dietHabits <- dietHabits %>%
   select(Age, Gender, DietType, Weekly_food_intake_Sweet_foods, Weekly_food_intake_Salty_foods) %>%
   filter(Age == "35-44" | Age == "45-54" | Age == "55-64" | Age == "Above 65")
+
+  unique(dietHabits$Age)
 head(dietHabits)
 
 sum(is.na(dietHabits)) ## output is 0
 ```
 
-```{r}
+
 heart <- read_delim("heart_failure_clinical_records_dataset.csv")
 head(heart, 5)
 
@@ -36,7 +38,5 @@ heart <- heart %>%
          diabetes = ifelse(diabetes == 1, "yes", "no"),
          high_blood_pressure = ifelse)
 heart
-
-
 ```
 
