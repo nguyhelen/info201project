@@ -45,7 +45,14 @@ heart <- heart %>%
          ))
 
 names(heart)[names(heart) == "sex"] <- "Gender"
+names(heart)[names(heart) == "age"] <- "Age"
 
 heart
 ```
+
+```{r}
+merge_data <- merge(dietHabits, heart, by = "Age", all = TRUE)
+merge_data
+```
+
 
