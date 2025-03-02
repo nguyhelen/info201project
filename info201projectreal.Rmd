@@ -81,7 +81,8 @@ head(merged_income_incident)
 ```{r}
 # Plotting the merged data sets to answer RQ01
 ggplot(merged_income_incident, aes(x = avg_median_income, y = num_incidents)) +
-  geom_point(alpha = 0.6, color = "red") + 
+  geom_point(alpha = 0.6, color = "red") +
+  ylim(0, 100) +
   geom_smooth(method = "lm", se = TRUE, color = "blue") + 
   labs(
     title = "Police Killings vs. Median Income on State Level (2015)",
