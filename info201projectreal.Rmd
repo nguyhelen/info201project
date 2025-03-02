@@ -29,8 +29,7 @@ nrow(Race)
 ## MHI has missing income values which have been cleaned.
 MHI_clean <- MHI %>%
   filter(!is.na(`Median Income`) & `Median Income` != "(X)" & `Median Income` != "-")
-## Checking the decreases in number of rows.
-nrow(MHI)
+nrow(MHI_clean)
 
 ## Police Killings does not have any missing values for state and city.
 ## Race data set does not have any missing values either.
@@ -71,6 +70,29 @@ head(state_income)
 
 ## Step 05: Merged
 merged_income_incident <- left_join(PK_numbers, state_income , by = "state")
+
+merged_income_incident <- merged_income_incident %>%
+  mutate(log_killings = log(num_incidents + 1))
+
 head(merged_income_incident)
+
+```
+
+```{r}
+# Plotting the merged data sets to answer RQ01
+ggplot(merged_income_incident, aes(x = avg_median_income, y = num_incidents)) +
+  geom_point(alpha = 0.6, color = "red") + 
+  geom_smooth(method = "lm", se = TRUE, color = "blue") + 
+  labs(
+    title = "Police Killings vs. Median Income on State Level (2015)",
+    x = "Average Median Household Income (USD) in 2015",
+    y = "Total Police Violence Incidents"
+  ) +
+  theme_minimal()
+```
+
+```{r}
+#testing co-relation
+cor.test(merged_income_incident$avg_median_income, merged_income_incident$num_incidents, method = "pearson")
 
 ```
