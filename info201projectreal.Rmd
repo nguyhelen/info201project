@@ -4,19 +4,73 @@ author: "Helen Nguyen"
 date: "2025-02-19"
 output: html_document
 ---
-Is this thing working???
 
-### 1. Loading Data
 ```{r}
+# 1. Loading Data
 library(tidyverse)
-HF_rec <- read_csv("heart_failure_clinical_records_dataset.csv")
-Diet_data <- read_csv("Dietary Habits Survey Data.csv")
+MHI <- read_delim("MedianHouseholdIncome2015.csv", show_col_types = FALSE)
+PK <- read_delim("PoliceKillingsUS.csv", show_col_types = FALSE)
+Race <- read_delim("ShareRaceByCity.csv", show_col_types = FALSE)
+
+head(MHI)
+head(PK)
+head(Race)
+
+nrow(MHI)
+nrow(PK)
+nrow(Race)
 
 ```
 
-### 2. Check for Missing values
+
 ```{r}
-glimpse(HF_rec)
-glimpse(Diet_data)
+# 2. Handling missing values
+
+## MHI has missing income values which have been cleaned.
+MHI_clean <- MHI %>%
+  filter(!is.na(`Median Income`) & `Median Income` != "(X)" & `Median Income` != "-")
+## Checking the decreases in number of rows.
+nrow(MHI)
+
+## Police Killings does not have any missing values for state and city.
+## Race data set does not have any missing values either.
+
+```
+
+```{r}
+# RQ01 : 1.	What is the relationship between median household income and police killings in US cities?
+
+# Merging data sets
+## Step 01: Standardize column names
+income_data <- MHI_clean %>%
+  rename(state = `Geographic Area`)
+
+police_killings <- PK %>%
+  rename(state = state)
+
+income_data
+
+## Step 02: Counting the number of Incidents per state
+PK_numbers <- PK %>%
+  group_by(state)%>%
+  summarise(num_incidents = n(), .groups = "drop")
+
+head(PK_numbers)
+
+## Step 03: Calculating average income per state
+income_data <- income_data %>%
+  mutate(`Median Income` = as.numeric(`Median Income`))
+  
+state_income <- income_data %>%
+  group_by(state) %>%
+  summarise(avg_median_income = mean(`Median Income`, na.rm = TRUE))
+
+head(state_income)
+
+## Step 04: Identified the key value = state.
+
+## Step 05: Merged
+merged_income_incident <- left_join(PK_numbers, state_income , by = "state")
+head(merged_income_incident)
 
 ```
