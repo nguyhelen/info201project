@@ -17,17 +17,26 @@ Pop <- read_excel("nst-est2019-01.xlsx")
 head(MHI)
 head(PK)
 head(Race)
-head(Pop)
 
 nrow(MHI)
 nrow(PK)
 nrow(Race)
+
+## renaming the two columns for Pop data set
+names(Pop)[names(Pop) == "table with row headers in column A and column headers in rows 3 through 4. (leading dots indicate sub-parts)"] <- "state"
+names(Pop)[names(Pop) == "...9"] <- "popEst2015"
+Pop$state <- str_remove(Pop$state, "^\\.") # Gets rid of the "." in the data for States
+
+
+# Gets rid of the first few rows & only shows states abbreviations and population during 2015
+Pop <- Pop %>%
+  select(state, popEst2015) %>%
+  slice(-(1:8)) %>%
+  mutate(state = state.abb[match(state, state.name)], 
+                            state = replace(state, 9, "DC"))
+
+head(Pop)
 nrow(Pop)
-
-colnames(Pop)
-
-## renaming
-
 ```
 
 
@@ -38,6 +47,10 @@ colnames(Pop)
 MHI_clean <- MHI %>%
   filter(!is.na(`Median Income`) & `Median Income` != "(X)" & `Median Income` != "-")
 nrow(MHI_clean)
+
+Pop_clean <- Pop %>%
+    filter(!is.na(state) & !is.na(popEst2015))
+nrow(Pop_clean)
 
 ## Police Killings does not have any missing values for state and city.
 ## Race data set does not have any missing values either.
@@ -77,7 +90,8 @@ head(state_income)
 ## Step 04: Identified the key value = state.
 
 ## Step 05: Merged
-merged_income_incident <- left_join(PK_numbers, state_income , by = "state")
+merged_income_incident <- left_join(PK_numbers, state_income , by = "state") %>%
+  merge(Pop_clean, by = "state")
 
 merged_income_incident <- merged_income_incident %>%
   mutate(log_killings = log(num_incidents + 1))
