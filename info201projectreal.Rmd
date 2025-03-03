@@ -8,17 +8,25 @@ output: html_document
 ```{r}
 # 1. Loading Data
 library(tidyverse)
+library(readxl)
 MHI <- read_delim("MedianHouseholdIncome2015.csv", show_col_types = FALSE)
 PK <- read_delim("PoliceKillingsUS.csv", show_col_types = FALSE)
 Race <- read_delim("ShareRaceByCity.csv", show_col_types = FALSE)
+Pop <- read_excel("nst-est2019-01.xlsx")
 
 head(MHI)
 head(PK)
 head(Race)
+head(Pop)
 
 nrow(MHI)
 nrow(PK)
 nrow(Race)
+nrow(Pop)
+
+colnames(Pop)
+
+## renaming
 
 ```
 
