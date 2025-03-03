@@ -1,6 +1,6 @@
 # ** Analyzing Police Killings & Socioeconomic Factors in the U.S (2015)**
-** Group 3 - INFO 201 Final Project**
-** Team Members** : Helen Nguyen, Sruti Banerjee, Jackie Tran, Tejasvi Konakanchi.
+# ** Group 3 - INFO 201 Final Project**
+# ** Team Members** : Helen Nguyen, Sruti Banerjee, Jackie Tran, Tejasvi Konakanchi.
 
 ---
 ## ** Project Overview **
