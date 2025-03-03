@@ -94,7 +94,10 @@ merged_income_incident <- left_join(PK_numbers, state_income , by = "state") %>%
   merge(Pop_clean, by = "state")
 
 merged_income_incident <- merged_income_incident %>%
-  mutate(log_killings = log(num_incidents + 1))
+  mutate(popEst2015 = as.numeric(popEst2015),
+         killings_per_100k = (num_incidents / popEst2015) * 100000)%>%
+  mutate(log_killings_per_100k = log(killings_per_100k + 1))
+
 
 head(merged_income_incident)
 
@@ -102,20 +105,24 @@ head(merged_income_incident)
 
 ```{r}
 # Plotting the merged data sets to answer RQ01
-ggplot(merged_income_incident, aes(x = avg_median_income, y = num_incidents)) +
+ggplot(merged_income_incident, aes(x = avg_median_income, y = log_killings_per_100k)) +
   geom_point(alpha = 0.6, color = "red") +
-  ylim(0, 100) +
   geom_smooth(method = "lm", se = TRUE, color = "blue") + 
   labs(
-    title = "Police Killings vs. Median Income on State Level (2015)",
-    x = "Average Median Household Income (USD) in 2015",
-    y = "Total Police Violence Incidents"
+    title = "Log(Violence per 100k Residents) vs. Median Income on State Level (2015)",
+    x = "Average Median Household Income (USD)",
+    y = "Log(Violence per 100k Residents)"
   ) +
   theme_minimal()
 ```
 
 ```{r}
 #testing co-relation
-cor.test(merged_income_incident$avg_median_income, merged_income_incident$num_incidents, method = "pearson")
-
+cor.test(merged_income_incident$avg_median_income, merged_income_incident$log_killings_per_100k, method = "pearson")
 ```
+### RQ 01: What is the relationship between median household income and police killings across the States in US?
+From our data visualization, a negative co-relation was found. From the Pearson's co-relation, p = 0.007 which indicates significant statistic relevance. And the moderate negative co-relation can be interpreted as - "As median household income increases, police killings per 100K residents tend to decrease."
+
+Our scatter plot shows a downward trend reinforcing the negative co-relation. The blue trend line has a negative slope, meaning high-income states generally experience fewer violent police incidents per capita.This suggests that socioeconomic factors may influence the rate of police brutality.
+
+Note: A log transformation was applied to handle skewness in the data. The log reduced the influence of extreme values and made the relationship more interpret able.
