@@ -13,7 +13,7 @@
 
 <meta name="date" content="2025-02-19" />
 
-<title>info201project</title>
+<title>Diet-Type cleaning</title>
 
 <script>// Pandoc 2.9 adds attributes on both header and div. We remove the former (to
 // be compatible with the behavior of Pandoc < 2.8).
@@ -350,96 +350,62 @@ display: none;
 
 
 
-<h1 class="title toc-ignore">info201project</h1>
+<h1 class="title toc-ignore">Diet-Type cleaning</h1>
 <h4 class="author">Helen Nguyen</h4>
 <h4 class="date">2025-02-19</h4>
 
 </div>
 
 
-<p>Is this thing working???</p>
-<div id="loading-data" class="section level3">
-<h3>1. Loading Data</h3>
-<pre class="r"><code>library(tidyverse)</code></pre>
-<pre><code>## ── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──
-## ✔ dplyr     1.1.4     ✔ readr     2.1.5
-## ✔ forcats   1.0.0     ✔ stringr   1.5.1
-## ✔ ggplot2   3.5.1     ✔ tibble    3.2.1
-## ✔ lubridate 1.9.4     ✔ tidyr     1.3.1
-## ✔ purrr     1.0.4     
-## ── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
-## ✖ dplyr::filter() masks stats::filter()
-## ✖ dplyr::lag()    masks stats::lag()
-## ℹ Use the conflicted package (&lt;http://conflicted.r-lib.org/&gt;) to force all conflicts to become errors</code></pre>
-<pre class="r"><code>HF_rec &lt;- read_csv(&quot;heart_failure_clinical_records_dataset.csv&quot;)</code></pre>
-<pre><code>## Rows: 299 Columns: 13
+<pre class="r"><code>library(dplyr)</code></pre>
+<pre><code>## 
+## Attaching package: &#39;dplyr&#39;</code></pre>
+<pre><code>## The following objects are masked from &#39;package:stats&#39;:
+## 
+##     filter, lag</code></pre>
+<pre><code>## The following objects are masked from &#39;package:base&#39;:
+## 
+##     intersect, setdiff, setequal, union</code></pre>
+<pre class="r"><code>library(readr)</code></pre>
+<pre class="r"><code>dietHabits &lt;- read_delim(&quot;Dietary Habits Survey Data.csv&quot;)</code></pre>
+<pre><code>## Rows: 78 Columns: 27
 ## ── Column specification ────────────────────────────────────────────────────────
 ## Delimiter: &quot;,&quot;
-## dbl (13): age, anaemia, creatinine_phosphokinase, diabetes, ejection_fractio...
+## chr (24): Age, Gender, DietType, Choose all that apply: [I skip meals], Choo...
+## dbl  (2): How many meals do you have a day? (number of regular occasions in ...
+## lgl  (1):  
 ## 
 ## ℹ Use `spec()` to retrieve the full column specification for this data.
 ## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
-<pre class="r"><code>Diet_data &lt;- read_csv(&quot;Dietary Habits Survey Data.csv&quot;)</code></pre>
-<pre><code>## New names:
-## Rows: 78 Columns: 27
-## ── Column specification
-## ──────────────────────────────────────────────────────── Delimiter: &quot;,&quot; chr
-## (24): Age, Gender, What would best describe your diet:, Choose all that ... dbl
-## (2): How many meals do you have a day? (number of regular occasions in ... lgl
-## (1): ...27
-## ℹ Use `spec()` to retrieve the full column specification for this data. ℹ
-## Specify the column types or set `show_col_types = FALSE` to quiet this message.
-## • `` -&gt; `...27`</code></pre>
-</div>
-<div id="check-for-missing-values" class="section level3">
-<h3>2. Check for Missing values</h3>
-<pre class="r"><code>glimpse(HF_rec)</code></pre>
-<pre><code>## Rows: 299
-## Columns: 13
-## $ age                      &lt;dbl&gt; 75, 55, 65, 50, 65, 90, 75, 60, 65, 80, 75, 6…
-## $ anaemia                  &lt;dbl&gt; 0, 0, 0, 1, 1, 1, 1, 1, 0, 1, 1, 0, 1, 1, 1, …
-## $ creatinine_phosphokinase &lt;dbl&gt; 582, 7861, 146, 111, 160, 47, 246, 315, 157, …
-## $ diabetes                 &lt;dbl&gt; 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, …
-## $ ejection_fraction        &lt;dbl&gt; 20, 38, 20, 20, 20, 40, 15, 60, 65, 35, 38, 2…
-## $ high_blood_pressure      &lt;dbl&gt; 1, 0, 0, 0, 0, 1, 0, 0, 0, 1, 1, 1, 0, 1, 1, …
-## $ platelets                &lt;dbl&gt; 265000, 263358, 162000, 210000, 327000, 20400…
-## $ serum_creatinine         &lt;dbl&gt; 1.90, 1.10, 1.30, 1.90, 2.70, 2.10, 1.20, 1.1…
-## $ serum_sodium             &lt;dbl&gt; 130, 136, 129, 137, 116, 132, 137, 131, 138, …
-## $ sex                      &lt;dbl&gt; 1, 1, 1, 1, 0, 1, 1, 1, 0, 1, 1, 1, 1, 1, 0, …
-## $ smoking                  &lt;dbl&gt; 0, 0, 1, 0, 0, 1, 0, 1, 0, 1, 1, 1, 0, 0, 0, …
-## $ time                     &lt;dbl&gt; 4, 6, 7, 7, 8, 8, 10, 10, 10, 10, 10, 10, 11,…
-## $ DEATH_EVENT              &lt;dbl&gt; 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, …</code></pre>
-<pre class="r"><code>glimpse(Diet_data)</code></pre>
-<pre><code>## Rows: 78
-## Columns: 27
-## $ Age                                                                                                                                          &lt;chr&gt; …
-## $ Gender                                                                                                                                       &lt;chr&gt; …
-## $ `How many meals do you have a day? (number of regular occasions in a day when a significant and reasonably filling amount of food is eaten)` &lt;dbl&gt; …
-## $ `What would best describe your diet:`                                                                                                        &lt;chr&gt; …
-## $ `Choose all that apply: [I skip meals]`                                                                                                      &lt;chr&gt; …
-## $ `Choose all that apply: [I experience feelings of hunger during the day]`                                                                    &lt;chr&gt; …
-## $ `Choose all that apply: [I consult a nutritionist/dietician]`                                                                                &lt;chr&gt; …
-## $ `Choose all that apply: [I cook my own meals]`                                                                                               &lt;chr&gt; …
-## $ `What would you consider to be the main meal of YOUR day?`                                                                                   &lt;chr&gt; …
-## $ `What does your diet mostly consist of and how is it prepared?`                                                                              &lt;chr&gt; …
-## $ `How many times a week do you order-in or go out to eat?`                                                                                    &lt;dbl&gt; …
-## $ `Are you allergic to any of the following? (Tick all that apply)`                                                                            &lt;chr&gt; …
-## $ `What is your weekly food intake frequency of the following food categories: [Sweet foods]`                                                  &lt;chr&gt; …
-## $ `What is your weekly food intake frequency of the following food categories: [Salty foods]`                                                  &lt;chr&gt; …
-## $ `What is your weekly food intake frequency of the following food categories: [Fresh fruit]`                                                  &lt;chr&gt; …
-## $ `What is your weekly food intake frequency of the following food categories: [Fresh vegetables]`                                             &lt;chr&gt; …
-## $ `What is your weekly food intake frequency of the following food categories: [Oily, fried foods]`                                            &lt;chr&gt; …
-## $ `What is your weekly food intake frequency of the following food categories: [Meat]`                                                         &lt;chr&gt; …
-## $ `What is your weekly food intake frequency of the following food categories: [Seafood ]`                                                     &lt;chr&gt; …
-## $ `How frequently do you consume these beverages [Tea]`                                                                                        &lt;chr&gt; …
-## $ `How frequently do you consume these beverages [Coffee]`                                                                                     &lt;chr&gt; …
-## $ `How frequently do you consume these beverages [Aerated (Soft) Drinks]`                                                                      &lt;chr&gt; …
-## $ `How frequently do you consume these beverages [Fruit Juices (Fresh/Packaged)]`                                                              &lt;chr&gt; …
-## $ `How frequently do you consume these beverages [Dairy Beverages (Milk, Milkshakes, Smoothies, Buttermilk, etc)]`                             &lt;chr&gt; …
-## $ `How frequently do you consume these beverages [Alcoholic Beverages]`                                                                        &lt;chr&gt; …
-## $ `What is your water consumption like (in a day, 1 cup=250ml approx)`                                                                         &lt;chr&gt; …
-## $ ...27                                                                                                                                        &lt;lgl&gt; …</code></pre>
-</div>
+<pre class="r"><code>dietHabits &lt;- dietHabits %&gt;%
+  select(Age, Gender, DietType, Weekly_food_intake_Sweet_foods, Weekly_food_intake_Salty_foods) %&gt;%
+  filter(Age == &quot;35-44&quot; | Age == &quot;45-54&quot; | Age == &quot;55-64&quot; | Age == &quot;Above 65&quot;)
+
+  unique(dietHabits$Age)</code></pre>
+<pre><code>## [1] &quot;45-54&quot;    &quot;Above 65&quot; &quot;35-44&quot;</code></pre>
+<pre class="r"><code>head(dietHabits)</code></pre>
+<pre><code>## # A tibble: 6 × 5
+##   Age      Gender DietType         Weekly_food_intake_S…¹ Weekly_food_intake_S…²
+##   &lt;chr&gt;    &lt;chr&gt;  &lt;chr&gt;            &lt;chr&gt;                  &lt;chr&gt;                 
+## 1 45-54    Male   Pescatarian (Ve… Once a day             Several times a day   
+## 2 Above 65 Male   Pescatarian (Ve… Once a day             Several times a day   
+## 3 Above 65 Female Vegetarian (No … Several times a day    Several times a day   
+## 4 45-54    Female Eggetarian (Veg… Once a day             Several times a day   
+## 5 35-44    Female Pescatarian (Ve… Few times a week       Few times a week      
+## 6 45-54    Female Vegetarian (No … Few times a week       Few times a week      
+## # ℹ abbreviated names: ¹​Weekly_food_intake_Sweet_foods,
+## #   ²​Weekly_food_intake_Salty_foods</code></pre>
+<pre class="r"><code>sum(is.na(dietHabits)) ## output is 0</code></pre>
+<pre><code>## [1] 0</code></pre>
+<p>heart &lt;- read_delim(“heart_failure_clinical_records_dataset.csv”)
+head(heart, 5)</p>
+<p>heart &lt;- heart %&gt;% select(age, diabetes, high_blood_pressure,
+sex, DEATH_EVENT)</p>
+<p>head(heart, 5)</p>
+<p>heart &lt;- heart %&gt;% mutate(sex = ifelse(sex==1, “MALE”,
+“FEMALE”), DEATH_EVENT = ifelse(DEATH_EVENT==1, “yes”, “no”), diabetes =
+ifelse(diabetes == 1, “yes”, “no”), high_blood_pressure = ifelse) heart
+```</p>
 
 
 
