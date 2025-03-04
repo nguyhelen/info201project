@@ -152,23 +152,8 @@ Note: A log transformation was applied to handle skewness in the data. The log r
 
 ```{r}
 ## RQ4
-groupDataSetRQ4 <- groupDataSet %>%
-  select(state, PoliceKillings, white, black, native_american, asian, hispanic) %>%
-  pivot_longer(cols = c(white, black, native_american, asian, hispanic),
-               names_to = "Race",
-               values_to = "RacePercent")
-
-ggplot(groupDataSetRQ4, aes(x = RacePercent, y = PoliceKillings, group = state, col = state)) +
-  geom_col(stat = "identity") +
-  labs(
-    title = "Police Violence in Each State based on Race",
-    x = "Race by Percentage",
-    y = "Police Violence"
-  ) +
-  theme_minimal()
-  
 
 ```
-### RQ 04: 4.	Is there a specific area that has significantly high police brutality in the US and what's the general ethnic population?
+### RQ 04: Is there a specific area that has significantly high police brutality in the US? What the race percentage in those areas?
 
 
