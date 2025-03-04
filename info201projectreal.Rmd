@@ -38,6 +38,16 @@ Pop <- Pop %>%
 head(Pop)
 nrow(Pop)
 ```
+```{r}
+## Police Killings clean (has state and police killings)
+PK_clean <- PK %>%
+  select(state) %>%
+  filter(!is.na(state)) %>%
+  group_by(state) %>%
+  summarize(PoliceKillings = n())
+
+PK_clean
+```
 
 
 ```{r}
@@ -126,3 +136,7 @@ From our data visualization, a negative co-relation was found. From the Pearson'
 Our scatter plot shows a downward trend reinforcing the negative co-relation. The blue trend line has a negative slope, meaning high-income states generally experience fewer violent police incidents per capita.This suggests that socioeconomic factors may influence the rate of police brutality.
 
 Note: A log transformation was applied to handle skewness in the data. The log reduced the influence of extreme values and made the relationship more interpret able.
+
+### RQ 04:4.	Is there a city, state or region that has significantly high police brutality?
+
+
