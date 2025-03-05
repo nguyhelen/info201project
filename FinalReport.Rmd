@@ -152,8 +152,19 @@ Note: A log transformation was applied to handle skewness in the data. The log r
 
 ```{r}
 ## RQ4
+library(usmap)
+library(viridis)
+groupDataSetRQ4 <- groupDataSet %>%
+  mutate(popEst2015 = as.numeric(popEst2015),
+         killings_per_100k = (PoliceKillings / popEst2015) * 100000)
 
+plot_usmap(data = groupDataSetRQ4, values = "killings_per_100k", regions = "states") +
+  scale_fill_gradientn(colors = c("#F9FBF2", "#FFEDE1", "#D7F9FF", "#AFCBFF", "#0E1C36"), name = "Police Killings") +
+  theme_minimal() +
+  labs(title = "Police Killings by State in the U.S.",
+       subtitle = "Darker states indicate higher police killings")
 ```
-### RQ 04: Is there a specific area that has significantly high police brutality in the US? What the race percentage in those areas?
+### RQ 04: Is there a specific area that has significantly high police brutality in the US?
 
+New Mexico has a significantly high police brutality rate in the U.S.
 
