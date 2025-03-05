@@ -12,9 +12,29 @@ library(readxl)
 ## Loading data
 MHI <- read_delim("MedianHouseholdIncome2015.csv", show_col_types = FALSE) # Median Household Income
 PK <- read_delim("PoliceKillingsUS.csv", show_col_types = FALSE) # Police Killings
-Race <- read_delim("ShareRaceByCity.csv", show_col_types = FALSE) # Race by city
 Pop <- read_excel("nst-est2019-01.xlsx") # Population by state
+PR <- read_delim("PercentagePeopleBelowPovertyLevel.csv", show_col_types = FALSE) #Poverty rate
 ```
+```{r}
+## PR cleaning & reshaping
+colnames(PR)
+
+names(PR)[names(PR) == "Geographic Area"] <- "state"
+
+PR_clean <- PR %>%
+  select(state, poverty_rate) %>%
+  filter(!is.na(state) & !is.na(poverty_rate)) %>%
+  group_by(state) %>%
+  mutate(poverty_rate = as.numeric(poverty_rate)) %>%
+  summarize(avg_poverty_rate = mean(poverty_rate, na.rm = TRUE))
+head(PR_clean)
+
+min(PR_clean$avg_poverty_rate)
+max(PR_clean$avg_poverty_rate)
+mean(PR_clean$avg_poverty_rate)
+
+```
+
 
 ```{r}
 ## renaming the two columns for Pop data set
@@ -67,39 +87,6 @@ head(PK_clean)
 ```
 
 ```{r}
-## renaming the columns for race data set
-names(Race)[names(Race) == "Geographic area"] <- "state"
-names(Race)[names(Race) == "share_white"] <- "white"
-names(Race)[names(Race) == "share_black"] <- "black"
-names(Race)[names(Race) == "share_native_american"] <- "native_american"
-names(Race)[names(Race) == "share_asian"] <- "asian"
-names(Race)[names(Race) == "share_hispanic"] <- "hispanic"
-
-## Share by race clean and reshape
-Race_clean <- Race %>%
-  select(state, white, black, native_american, asian, hispanic) %>%
-    filter(if_any(c(state, white, black, native_american, asian, hispanic), ~ !is.na(.))) %>%
-  group_by(state) %>%
-  mutate(white = as.numeric(white),
-         black = as.numeric(black),
-         native_american = as.numeric(native_american),
-         asian = as.numeric(asian),
-         hispanic = as.numeric(hispanic)) %>%
-  summarize(white = mean(white, na.rm = TRUE),
-            black = mean(black, na.rm = TRUE),
-            native_american = mean(native_american, na.rm = TRUE),
-            asian = mean(asian, na.rm = TRUE),
-            hispanic = mean(hispanic, na.rm = TRUE)) %>%
-  mutate(white = round(white, 2),
-         black = round(black, 2),
-         native_american = round(native_american, 2),
-         asian = round(asian, 2),
-         hispanic = round(hispanic, 2))
-
-head(Race_clean)
-```
-
-```{r}
 ## Merging
 groupDataSet <- PK_clean %>%
   full_join(MHI_clean, by = "state") %>%
@@ -147,6 +134,8 @@ Note: A log transformation was applied to handle skewness in the data. The log r
 
 ```{r}
 ## RQ3
+
+
 ```
 ### RQ 03: How are Race and Median Household income related in US?
 
