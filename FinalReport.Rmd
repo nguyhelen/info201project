@@ -103,8 +103,8 @@ groupDataSetRQ1 <- groupDataSet %>%
 
 # Plotting the merged data sets to answer RQ01
 ggplot(groupDataSetRQ1, aes(x = median_income, y = log_killings_per_100k)) +
-  geom_point(alpha = 0.6, color = "red") +
-  geom_smooth(method = "lm", se = TRUE, color = "blue") + 
+  geom_point(color = "yellow2", alpha = 0.6) +
+  geom_smooth(method = "lm", se = TRUE, color = "lightblue3") + 
   labs(
     title = "Log(Violence per 100k Residents) vs. Median Income on State Level (2015)",
     x = "Average Median Household Income (USD)",
@@ -145,8 +145,8 @@ groupDataSetRQ2 <- groupDataSet %>%
 
 ## Plotting the poverty and police killings
 ggplot(groupDataSetRQ1, aes(x = avg_poverty_rate, y = killings_per_100k)) +
-  geom_point(alpha = 0.6, color = "red") +
-  geom_smooth(method = "lm", se = TRUE, color = "blue") + 
+  geom_point(alpha = 0.4, color = "purple") +
+  geom_smooth(method = "lm", se = TRUE, color = "gold2") + 
   labs(
     title = "Log(Violence per 100k Residents) vs. Average poverty rate (2015)",
     x = "Average poverty rate",
