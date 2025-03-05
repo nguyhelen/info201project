@@ -1,0 +1,159 @@
+---
+title: "Final Report"
+author: "Helen Nguyen"
+date: "2025-03-04"
+output: html_document
+---
+
+```{r}
+library(tidyverse)
+library(readxl)
+
+## Loading data
+MHI <- read_delim("MedianHouseholdIncome2015.csv", show_col_types = FALSE) # Median Household Income
+PK <- read_delim("PoliceKillingsUS.csv", show_col_types = FALSE) # Police Killings
+Race <- read_delim("ShareRaceByCity.csv", show_col_types = FALSE) # Race by city
+Pop <- read_excel("nst-est2019-01.xlsx") # Population by state
+```
+
+```{r}
+## renaming the two columns for Pop data set
+names(Pop)[names(Pop) == "table with row headers in column A and column headers in rows 3 through 4. (leading dots indicate sub-parts)"] <- "state"
+names(Pop)[names(Pop) == "...9"] <- "popEst2015"
+Pop$state <- str_remove(Pop$state, "^\\.") # Gets rid of the "." in the data for States
+
+
+# Gets rid of the first few rows & only shows states abbreviations and population during 2015
+Pop <- Pop %>%
+  select(state, popEst2015) %>%
+  slice(-(1:8)) %>%
+  mutate(state = state.abb[match(state, state.name)], 
+                            state = replace(state, 9, "DC"))
+
+## Pop has missing values and have been cleaned
+Pop_clean <- Pop %>%
+    filter(!is.na(state) & !is.na(popEst2015))
+nrow(Pop_clean)
+head(Pop_clean)
+```
+
+```{r}
+## MHI has missing income values which have been cleaned.
+MHI_clean <- MHI %>%
+  filter(!is.na(`Median Income`) & `Median Income` != "(X)" & `Median Income` != "-")
+
+## changing column name for MHI
+names(MHI_clean)[names(MHI_clean) == "Geographic Area"] <- "state"
+names(MHI_clean)[names(MHI_clean) == "Median Income"] <- "median_income"
+
+MHI_clean <- MHI_clean %>%
+  select(state, median_income) %>%
+  group_by(state) %>%
+  mutate(median_income = as.numeric(median_income)) %>%
+  summarize(median_income = mean(median_income, na.rm = TRUE))
+
+head(MHI_clean)
+```
+
+```{r}
+## PK has been cleaned from missing values and has the sum of killings per state
+PK_clean <- PK %>%
+  select(state) %>%
+  filter(!is.na(state)) %>%
+  group_by(state) %>%
+  summarize(PoliceKillings = n())
+
+head(PK_clean)
+```
+
+```{r}
+## renaming the columns for race data set
+names(Race)[names(Race) == "Geographic area"] <- "state"
+names(Race)[names(Race) == "share_white"] <- "white"
+names(Race)[names(Race) == "share_black"] <- "black"
+names(Race)[names(Race) == "share_native_american"] <- "native_american"
+names(Race)[names(Race) == "share_asian"] <- "asian"
+names(Race)[names(Race) == "share_hispanic"] <- "hispanic"
+
+## Share by race clean and reshape
+Race_clean <- Race %>%
+  select(state, white, black, native_american, asian, hispanic) %>%
+    filter(if_any(c(state, white, black, native_american, asian, hispanic), ~ !is.na(.))) %>%
+  group_by(state) %>%
+  mutate(white = as.numeric(white),
+         black = as.numeric(black),
+         native_american = as.numeric(native_american),
+         asian = as.numeric(asian),
+         hispanic = as.numeric(hispanic)) %>%
+  summarize(white = mean(white, na.rm = TRUE),
+            black = mean(black, na.rm = TRUE),
+            native_american = mean(native_american, na.rm = TRUE),
+            asian = mean(asian, na.rm = TRUE),
+            hispanic = mean(hispanic, na.rm = TRUE)) %>%
+  mutate(white = round(white, 2),
+         black = round(black, 2),
+         native_american = round(native_american, 2),
+         asian = round(asian, 2),
+         hispanic = round(hispanic, 2))
+
+head(Race_clean)
+```
+
+```{r}
+## Merging
+groupDataSet <- PK_clean %>%
+  full_join(MHI_clean, by = "state") %>%
+  full_join(Pop_clean, by = "state") %>%
+  full_join(Race_clean, by = "state")
+
+head(groupDataSet)
+```
+```{r}
+## RQ01
+groupDataSetRQ1 <- groupDataSet %>%
+  mutate(popEst2015 = as.numeric(popEst2015),
+         killings_per_100k = (PoliceKillings / popEst2015) * 100000)%>%
+  mutate(log_killings_per_100k = log(killings_per_100k + 1))
+
+# Plotting the merged data sets to answer RQ01
+ggplot(groupDataSetRQ1, aes(x = median_income, y = log_killings_per_100k)) +
+  geom_point(alpha = 0.6, color = "red") +
+  geom_smooth(method = "lm", se = TRUE, color = "blue") + 
+  labs(
+    title = "Log(Violence per 100k Residents) vs. Median Income on State Level (2015)",
+    x = "Average Median Household Income (USD)",
+    y = "Log(Violence per 100k Residents)"
+  ) +
+  theme_minimal()
+```
+```{r}
+#testing co-relation
+cor.test(groupDataSetRQ1$median_income, groupDataSetRQ1$log_killings_per_100k, method = "pearson")
+```
+
+### RQ 01: What is the relationship between median household income and police killings across the States in US?
+
+From our data visualization, a negative co-relation was found. From the Pearson's co-relation, p = 0.007 which indicates significant statistic relevance. And the moderate negative co-relation can be interpreted as - "As median household income increases, police killings per 100K residents tend to decrease."
+
+Our scatter plot shows a downward trend reinforcing the negative co-relation. The blue trend line has a negative slope, meaning high-income states generally experience fewer violent police incidents per capita.This suggests that socioeconomic factors may influence the rate of police brutality.
+
+Note: A log transformation was applied to handle skewness in the data. The log reduced the influence of extreme values and made the relationship more interpret able.
+
+```{r}
+## RQ2
+
+```
+### RQ 02: Are racial minorities disproportionately affected by police killings  relative to their population share?
+
+```{r}
+## RQ3
+```
+### RQ 03: How are Race and Median Household income related in US?
+
+```{r}
+## RQ4
+
+```
+### RQ 04: Is there a specific area that has significantly high police brutality in the US? What the race percentage in those areas?
+
+
