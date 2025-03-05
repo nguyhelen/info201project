@@ -91,7 +91,7 @@ head(PK_clean)
 groupDataSet <- PK_clean %>%
   full_join(MHI_clean, by = "state") %>%
   full_join(Pop_clean, by = "state") %>%
-  full_join(Race_clean, by = "state")
+  full_join(PR_clean, by = "state")
 
 head(groupDataSet)
 ```
@@ -130,14 +130,41 @@ Note: A log transformation was applied to handle skewness in the data. The log r
 ## RQ2
 
 ```
-### RQ 02: Are racial minorities disproportionately affected by police killings  relative to their population share?
+### RQ 02: Do states with higher poverty rates experience higher rates of police killings?
 
 ```{r}
 ## RQ3
+groupDataSetRQ3 <- groupDataSet %>%
+  select(state, popEst2015, avg_poverty_rate) %>%
+  mutate(
+    region = case_when(
+      state %in% c("ME", "NH", "VT", "MA", "RI", "CT", "NY", "NJ", "PA") ~ "NE",  # Northeast
+      state %in% c("OH", "IN", "IL", "MI", "WI", "MO", "IA", "MN", "ND", "SD", "NE", "KS") ~ "MW",  # Midwest
+      state %in% c("DE", "MD", "DC", "VA", "NC", "SC", "GA", "FL", "KY", "TN", "AL", "MS", "AR", "LA", "OK", "TX", "WV") ~ "S",  # South
+      state %in% c("MT", "WY", "CO", "ID", "UT", "NV", "AZ", "NM", "AK", "WA", "OR", "CA", "HI") ~ "W"  # West
+    )
+  ) %>%
+  group_by(region) %>%
+  summarise(
+    avg_poverty_rate_region = mean(avg_poverty_rate, na.rm = TRUE),  # Average poverty rate per region
+    avg_population_region = mean(popEst2015, na.rm = TRUE)  # Average population per region
+  ) %>%
+  mutate(avg_population_region = as.numeric(avg_population_region),
+         avg_poverty_rate_region = as.numeric(avg_poverty_rate_region))
+head(groupDataSetRQ3)
 
+ggplot(groupDataSetRQ3) +
+  geom_col(aes(x = region, y = avg_poverty_rate_region, fill = region), position = "dodge") +
+  geom_col(aes(x = region, y = avg_population_region, fill = region), alpha = 0.5, position = "dodge") +
+  labs(
+    title = "Average Poverty Rate and Population Size per Region",
+    x = "Region",
+    y = "Value"
+  ) +
+  theme_minimal()
 
 ```
-### RQ 03: How are Race and Median Household income related in US?
+### RQ 03: How is the poverty rate related to state population size? Do larger states tend to have higher or lower poverty rates?
 
 ```{r}
 ## RQ4
