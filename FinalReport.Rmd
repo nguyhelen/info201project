@@ -164,6 +164,7 @@ ggplot(groupDataSetRQ3) +
   theme_minimal()
 
 ```
+
 ### RQ 03: How is the poverty rate related to state population size? Do larger states tend to have higher or lower poverty rates?
 
 ```{r}
@@ -177,7 +178,7 @@ groupDataSetRQ4 <- groupDataSet %>%
 plot_usmap(data = groupDataSetRQ4, values = "killings_per_100k", regions = "states") +
   scale_fill_gradientn(colors = c("#F9FBF2", "#FFEDE1", "#D7F9FF", "#AFCBFF", "#0E1C36"), name = "Police Killings") +
   theme_minimal() +
-  labs(title = "Police Killings by State in the U.S.",
+  labs(title = "Police Killings per 100k Residents by State in the U.S.",
        subtitle = "Darker states indicate higher police killings")
 ```
 ### RQ 04: Is there a specific area that has significantly high police brutality in the US?
