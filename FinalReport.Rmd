@@ -188,11 +188,15 @@ groupDataSetRQ3 <- groupDataSet %>%
   ) %>%
   mutate(avg_population_region = as.numeric(avg_population_region),
          avg_poverty_rate_region = as.numeric(avg_poverty_rate_region))
-head(groupDataSetRQ3)
 
-ggplot(groupDataSetRQ3) +
-  geom_col(aes(x = region, y = avg_poverty_rate_region, fill = region), position = "dodge") +
-  geom_col(aes(x = region, y = avg_population_region, fill = region), alpha = 0.5, position = "dodge") +
+groupDataSetRQ3_long <- groupDataSetRQ3 %>%
+  pivot_longer(cols = c(avg_poverty_rate_region, avg_population_region),
+               names_to = "metric",
+               values_to = "value")
+
+ggplot(groupDataSetRQ3_long, aes(x = region, y = value, fill = region)) +
+  geom_col() +
+  facet_wrap(~metric, scales = "free_y") +
   labs(
     title = "Average Poverty Rate and Population Size per Region",
     x = "Region",
@@ -202,7 +206,7 @@ ggplot(groupDataSetRQ3) +
 
 ```
 
-### RQ 03: How is the poverty rate related to state population size? Do larger states tend to have higher or lower poverty rates?
+### RQ 03: How is the poverty rate related to the region population size? Do larger regions tend to have higher or lower poverty rates?
 
 ```{r, echo = FALSE, message = FALSE, warning = FALSE, results = 'hide'}
 ## RQ4
@@ -215,11 +219,7 @@ groupDataSetRQ4 <- groupDataSet %>%
 plot_usmap(data = groupDataSetRQ4, values = "killings_per_100k", regions = "states") +
   scale_fill_gradientn(colors = c("#F9FBF2", "#FFEDE1", "#D7F9FF", "#AFCBFF", "#0E1C36"), name = "Police Killings") +
   theme_minimal() +
-<<<<<<< HEAD
   labs(title = "Police Killings per 100k Residents by State in the U.S.",
-=======
-  labs(title = "Police Killings by State in the U.S. per 100k residences",
->>>>>>> f0d53e81bc7a25c3a16b71b63666f781866d9616
        subtitle = "Darker states indicate higher police killings")
 ```
 
