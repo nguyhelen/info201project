@@ -118,11 +118,6 @@ cor.test(groupDataSetRQ1$median_income, groupDataSetRQ1$log_killings_per_100k, m
 ```
 
 
-## Abstract
-
-
-
-
 ### RQ 01: What is the relationship between median household income and police killings across the States in US?
 
 From our data visualization, a negative co-relation was found. From the Pearson's co-relation, p = 0.007 which indicates significant statistic relevance. And the moderate negative co-relation can be interpreted as - "As median household income increases, police killings per 100K residents tend to decrease."
@@ -215,11 +210,7 @@ groupDataSetRQ4 <- groupDataSet %>%
 plot_usmap(data = groupDataSetRQ4, values = "killings_per_100k", regions = "states") +
   scale_fill_gradientn(colors = c("#F9FBF2", "#FFEDE1", "#D7F9FF", "#AFCBFF", "#0E1C36"), name = "Police Killings") +
   theme_minimal() +
-<<<<<<< HEAD
-  labs(title = "Police Killings per 100k Residents by State in the U.S.",
-=======
   labs(title = "Police Killings by State in the U.S. per 100k residences",
->>>>>>> f0d53e81bc7a25c3a16b71b63666f781866d9616
        subtitle = "Darker states indicate higher police killings")
 ```
 
