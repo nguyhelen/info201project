@@ -1,6 +1,6 @@
 ---
 title: "Final Report"
-author: "Helen Nguyen, Tejasvi Konakanchi, Sruti Banerjee"
+author: "Helen Nguyen, Tejasvi Konakanchi, Sruti Banerjee, Jackie Tran"
 output: html_document
 ---
 
