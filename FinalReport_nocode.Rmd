@@ -1,0 +1,350 @@
+---
+title: "Final Report"
+author: "Helen Nguyen, Tejasvi Konakanchi, Sruti Banerjee"
+output: html_document
+---
+
+## Abstract
+This project investigates the relationship between socioeconomic factors and police violence in the United States. Using datasets related to “Police Killings”, “Median Household Income”, “Population Statistics”, “Poverty Rates” we analyzed the patterns in police brutality in 2015. Using visualization methods such as scatter plots, bar plots and heat maps we were able to answer and analyze the issue. Our observations from data visualization:
+
+* As median household income (per state) increases, there is a decrease in police violence.
+* As the poverty rate (across states) increases, there is an increase in violent police incidents.
+* Larger population regions tend to have higher average poverty rates.
+* The state with highest police violence is ‘New Mexico’. 
+
+Data pre-processing techniques including standardizing, cleaning and merging have been performed to ensure accuracy. Correlation analysis and statistical analysis have been applied to confirm the relationship between these factors.
+
+## Introduction
+Police brutality remains a pressing issue in the United States, characterized by the excessive, unjustified, or unlawful use of force by law enforcement officers. The issue disproportionately affects marginalized communities and raises concerns about systemic bias in law enforcement ([The Washington Post, 2015](https://discordapp.com/channels/@me/1339311706073202779/1349116248352620658)). Understanding the socioeconomic factors linked to police violence is important for addressing these disparities and demanding policy reforms. 
+
+This report seeks to examine several key questions related to police brutality and economic factors. First, what is the relationship between median household income and police killings across the U.S.? This question helps determine whether economic status influences the likelihood of fatal police encounters. Second, do states with higher poverty rates experience higher rates of police killings? Understanding this relationship can shed light on the income disparities in police violence. Third, how is the poverty rate related to regional population size–do larger regions tend to have higher or lower poverty rates? Answering this can help policy makers allocate resources effectively for affected regions. Finally, which states have significantly high rates of police brutality? By identifying these states can help urge local governments to take necessary action to improve public safety. By addressing these questions, we aim to contribute to ongoing discussions on law enforcement accountability and socioeconomic inequality. The findings may serve as a valuable resource for policymakers, law enforcement agencies, and researchers working toward equitable and just policing practices in the United States.
+
+## Data Source
+We utilized four datasets to analyze the relationship between socioeconomic factors and police killings in the United States. The [PoliceKillingsUS.csv](https://www.kaggle.com/datasets/kwullum/fatal-police-shootings-in-the-us?select=PoliceKillingsUS.csv), [MedianHouseholdIncome2015.csv](https://www.kaggle.com/datasets/kwullum/fatal-police-shootings-in-the-us?select=MedianHouseholdIncome2015.csv), and [PercentagePeopleBelowPovertyLevel.csv](https://www.kaggle.com/datasets/kwullum/fatal-police-shootings-in-the-us?select=PercentagePeopleBelowPovertyLevel.csv) dataset were sourced on Kaggle and posted by the user Karolina Wullum and last updated 7 years ago.The census data in these datasets were gathered from factfinder.census.gov and the police killings data set was compiled by The Washington Post. Additionally, we used [nst-est2019-01.xlsx](https://www.census.gov/data/tables/time-series/demo/popest/2010s-national-total.html#par_textimage), which was collected from the United States census bureau under “State Population totals 2010-2019.” We only extracted out the population data for 2015. 
+
+Each dataset provides key insights into our research questions. The [PoliceKillingsUS.csv](https://www.kaggle.com/datasets/kwullum/fatal-police-shootings-in-the-us?select=PoliceKillingsUS.csv) dataset documents individual cases of fatal police shootings in each U.S. city in  2015. [MedianHouseholdIncome2015.csv](https://www.kaggle.com/datasets/kwullum/fatal-police-shootings-in-the-us?select=MedianHouseholdIncome2015.csv) represents the median household income by each state while [PercentagePeopleBelowPovertyLevel.csv](https://www.kaggle.com/datasets/kwullum/fatal-police-shootings-in-the-us?select=PercentagePeopleBelowPovertyLevel.csv) captures the percentage of people who are under the poverty line in each city in the states. [Nst-est2019-01.xlsx](https://www.census.gov/data/tables/time-series/demo/popest/2010s-national-total.html#par_textimage) contains the estimated state population over time. We selected these datasets because they align with our research objectives, helping us explore how economic status, poverty levels, and regional demographics may influence police violence. By analyzing these factors, we aim to see the potential socioeconomic patterns in police killings and identify communities most affected by it.
+
+## Data
+
+**MedianHouseholdIncome2015.csv:**
+
+* Number of rows: 29322, Number of columns: 3
+* Each row represents a specific city or town (region) in the United States of America, along with the corresponding geographic area (state).
+* Relevant variables and their coding: 
+    * _Geographic Area_: A two letter state abbreviation.
+    * _City_: The name of the city or town.
+    * _Median Income_: The median household income for that city or town, which appears to be stored as a string but represents numeric values.
+* There are 51 missing values in the _Median Income_ variable, the missing value is coded as “(X)”.
+
+
+**PoliceKillings.csv:**
+
+* Number of rows: 2535, Number of columns: 14
+* Each row represents an individual harmed by police in the US.
+* Relevant variables and their coding: 
+    * _id_: Unique identifier for each case. 
+    * _name_: Name of the individual killed. 
+    * _date_: Date of the incident. 
+    * _manner_of_death_: How the person was killed (e.g., "shot", "shot and Tasered"). 
+    * _armed_: Indicates whether the individual was armed and with what (e.g., "gun", "knife", "unarmed"). 
+    * _age_: Age of the individual. 
+    * _gender_: Gender of the individual (M for male, F for female). 
+    * _race_: Race of the individual (e.g., "W" for White, "B" for Black, "H" for Hispanic). 
+    * _city_: City where the incident occurred. 
+    * _state_: State where the incident occurred. 
+    * _signs_of_mental_illness_: Whether there were signs of mental illness (True or False). 
+    * _threat_level_: Perceived threat level (attack, other, undetermined). 
+    * _flee_: Whether the individual was fleeing (Foot, Car, Not fleeing, etc.). 
+    * _body_camera_: Whether a body camera was worn (True or False).
+* Missing Values: 
+    * _armed_: 9 missing values 
+    * _age_: 77 missing values 
+    * _race_: 195 missing values 
+    * _flee_: 65 missing values
+
+**PercentagePeopleBelowPovertyLevel.csv:**
+
+* Number of rows: 29329, Number of columns: 3
+* Each row represents a specific city or town in the United States, along with its corresponding state and the percentage of people living below the poverty level in that area.
+* Relevant variables and their coding: 
+    * _Geographic Area_: The two-letter state abbreviation (e.g., AL for Alabama). 
+    * _City_: The name of the city or town. 
+    * _poverty_rate_: The percentage of people living below the poverty level in that city.
+* Missing Values: 
+    * _Poverty_rate_: 201 entries, the missing value is coded as non numeric variables such as “-”
+
+**Nst-est2019-01.xlsx:**
+
+* Number of rows: 6 rows, Number of columns
+* Each row represents each state’s estimated population for each year from 2010-2019
+* Relevant variables and their coding:
+    * _state_: Name of the state associated with the estimated population
+    * _population_: the estimated population for each state
+* Missing Values:
+    * _population_: 96 missing values
+    
+## Methods
+To make our data easier to work with, we renamed longer column names like “Geographic Area” and “Median Income” to shorter names such as “state,” “popEst2015,” and “median_income.” We also filtered out all rows with N/A values from all datasets and used “state” as the merge key to combine them.
+
+For the poverty dataset, we calculated the average poverty rate across all cities within each state, using this average as the representative poverty rate for the state. For the population dataset, we removed data related to US regions and kept only state-specific data. In the police killings dataset, we calculated the total number of police killings in each state, which served as our indicator of police brutality.
+
+We focused on data from 2015, as all our datasets included observations for that year. The relevant variables for our analysis included state, poverty rate, median income, total police killings, and police killings per 100k residents. For research questions 1 and 2, we used the Pearson correlation coefficient to determine the strength of the relationships between the two variables we were comparing.
+
+One of our biggest challenges was handling the vast amount of data. With 50 states to account for, it was difficult to find the most effective way to display the data, particularly for research questions 3 and 4. Ultimately, we decided to group the states into 4 regions for question 3 and to use a heatmap for question 4.
+
+
+```{r echo=FALSE, message=FALSE, results='hide'}
+library(tidyverse)
+library(readxl)
+
+## Loading data
+MHI <- read_delim("MedianHouseholdIncome2015.csv", show_col_types = FALSE) # Median Household Income
+PK <- read_delim("PoliceKillingsUS.csv", show_col_types = FALSE) # Police Killings
+Pop <- read_excel("nst-est2019-01.xlsx") # Population by state
+PR <- read_delim("PercentagePeopleBelowPovertyLevel.csv", show_col_types = FALSE) #Poverty rate
+```
+```{r, echo = FALSE, message = FALSE, warning = FALSE, results = 'hide'}
+## PR cleaning & reshaping
+colnames(PR)
+
+names(PR)[names(PR) == "Geographic Area"] <- "state"
+
+PR_clean <- PR %>%
+  select(state, poverty_rate) %>%
+  filter(!is.na(state) & !is.na(poverty_rate)) %>%
+  group_by(state) %>%
+  mutate(poverty_rate = as.numeric(poverty_rate)) %>%
+  summarize(avg_poverty_rate = mean(poverty_rate, na.rm = TRUE))
+head(PR_clean)
+
+min(PR_clean$avg_poverty_rate)
+max(PR_clean$avg_poverty_rate)
+mean(PR_clean$avg_poverty_rate)
+
+```
+
+
+```{r, echo = FALSE, message = FALSE, warning = FALSE, results = 'hide'}
+## renaming the two columns for Pop data set
+names(Pop)[names(Pop) == "table with row headers in column A and column headers in rows 3 through 4. (leading dots indicate sub-parts)"] <- "state"
+names(Pop)[names(Pop) == "...9"] <- "popEst2015"
+Pop$state <- str_remove(Pop$state, "^\\.") # Gets rid of the "." in the data for States
+
+
+# Gets rid of the first few rows & only shows states abbreviations and population during 2015
+Pop <- Pop %>%
+  select(state, popEst2015) %>%
+  slice(-(1:8)) %>%
+  mutate(state = state.abb[match(state, state.name)], 
+                            state = replace(state, 9, "DC"))
+
+## Pop has missing values and have been cleaned
+Pop_clean <- Pop %>%
+    filter(!is.na(state) & !is.na(popEst2015))
+nrow(Pop_clean)
+colnames(Pop)
+head(Pop_clean)
+```
+
+```{r, echo = FALSE, message = FALSE, warning = FALSE, results = 'hide'}
+## MHI has missing income values which have been cleaned.
+MHI_clean <- MHI %>%
+  filter(!is.na(`Median Income`) & `Median Income` != "(X)" & `Median Income` != "-")
+
+## changing column name for MHI
+names(MHI_clean)[names(MHI_clean) == "Geographic Area"] <- "state"
+names(MHI_clean)[names(MHI_clean) == "Median Income"] <- "median_income"
+
+MHI_clean <- MHI_clean %>%
+  select(state, median_income) %>%
+  group_by(state) %>%
+  mutate(median_income = as.numeric(median_income)) %>%
+  summarize(median_income = mean(median_income, na.rm = TRUE))
+
+head(MHI_clean)
+```
+
+```{r, echo = FALSE, message = FALSE, warning = FALSE, results = 'hide'}
+## PK has been cleaned from missing values and has the sum of killings per state
+PK_clean <- PK %>%
+  select(state) %>%
+  filter(!is.na(state)) %>%
+  group_by(state) %>%
+  summarize(PoliceKillings = n())
+
+head(PK_clean)
+```
+
+```{r, echo = FALSE, message = FALSE, warning = FALSE, results = 'hide'}
+## Merging
+groupDataSet <- PK_clean %>%
+  full_join(MHI_clean, by = "state") %>%
+  full_join(Pop_clean, by = "state") %>%
+  full_join(PR_clean, by = "state")
+
+head(groupDataSet)
+```
+
+## Results
+### RQ 01: What is the relationship between median household income and police killings across the States in US?
+
+Our data visualization reveals a negative relationship between median household income and police killings across the U.S. The scatter plot illustrates a downward trend, reinforcing the negative correlation. The blue trend line, with its negative slope, suggests that higher-income states generally experience fewer violent police incidents per capita. This points to the possibility that socioeconomic factors may influence the rate of police brutality. When calculating the Pearson correlation coefficient, we found r = -0.37, indicating a moderate negative relationship between the two variables. In other words, as median household income increases, police killings per 100K residents tend to decrease.
+
+**Note:** A log transformation was applied to handle skewness in the data. The log reduced the influence of extreme values and made the relationship more interpretable.
+
+```{r, echo = FALSE, message = FALSE, warning = FALSE, results = 'hide'}
+## RQ01
+groupDataSetRQ1 <- groupDataSet %>%
+  mutate(popEst2015 = as.numeric(popEst2015),
+         killings_per_100k = (PoliceKillings / popEst2015) * 100000)%>%
+  mutate(log_killings_per_100k = log(killings_per_100k + 1))
+
+# Plotting the merged data sets to answer RQ01
+ggplot(groupDataSetRQ1, aes(x = median_income, y = log_killings_per_100k)) +
+  geom_point(color = "yellow2", alpha = 0.6) +
+  geom_smooth(method = "lm", se = TRUE, color = "lightblue3") + 
+  labs(
+    title = "Log(Violence per 100k Residents) vs. Median Income on State Level (2015)",
+    x = "Average Median Household Income (USD)",
+    y = "Log(Violence per 100k Residents)"
+  ) +
+  theme_minimal()
+```
+```{r}
+# calculating Pearson coefficient
+groupDataSetRQ1$median_income <- as.numeric(groupDataSetRQ1$median_income)
+
+RQ1_cor <- cor(groupDataSetRQ1$median_income, groupDataSetRQ1$log_killings_per_100k, method = "pearson", use = "complete.obs")
+RQ1_cor
+```
+
+
+
+### RQ 02: Do states with higher poverty rates experience higher rates of police killings?
+
+Our data visualization shows a positive relationship between poverty rates and police killings across each state. The Pearson correlation coefficient calculation yielded r = 0.55, indicating a moderate positive relationship between the two variables. This is reflected in the gold trend line, which has a positive slope, suggesting that as the average poverty rate increases, states generally experience higher violent police incidents per capita.
+
+**Note:** A log transformation was applied to handle skewness in the data. The log reduced the influence of extreme values and made the relationship more interpretable.
+
+```{r, echo = FALSE, message = FALSE, warning = FALSE, results = 'hide'}
+## RQ2
+groupDataSetRQ2 <- groupDataSet %>%
+  mutate(popEst2015 = as.numeric(popEst2015),
+         killings_per_100k = (PoliceKillings / popEst2015) * 100000)%>%
+  mutate(log_killings_per_100k = log(killings_per_100k + 1)) %>%
+  
+  select(state, PoliceKillings, 
+         avg_poverty_rate, 
+         killings_per_100k, 
+         log_killings_per_100k)
+
+## Plotting the poverty and police killings
+ggplot(groupDataSetRQ2, aes(x = avg_poverty_rate, y = killings_per_100k)) +
+  geom_point(alpha = 0.4, color = "purple") +
+  geom_smooth(method = "lm", se = TRUE, color = "gold2") + 
+  labs(
+    title = "Log(Violence per 100k Residents) vs. Average poverty rate (2015)",
+    x = "Average poverty rate",
+    y = "Log(Violence per 100k Residents)"
+  ) +
+  theme_minimal()
+
+
+```
+```{r, echo = FALSE, message = FALSE, warning = FALSE, results = 'hide'}
+#testing pearson coefficient
+
+RQ2_cor <- cor(groupDataSetRQ2$avg_poverty_rate, groupDataSetRQ2$log_killings_per_100k, method = "pearson", use = "complete.obs")
+RQ2_cor
+```
+
+### RQ 03: How is the poverty rate related to the region population size? Do larger regions tend to have higher or lower poverty rates?
+
+The bar graph shows that the southern region has the largest population and also the highest poverty rate, suggesting a potential relationship between population size and poverty rates. However, the northeast region, which has the second-largest population, exhibits the lowest poverty rate. This indicates that while there may be some relationship between regional population size and poverty rates, the correlation is not strong enough to establish a definitive pattern.
+
+```{r, echo = FALSE, message = FALSE, warning = FALSE, results = 'hide'}
+## RQ3
+groupDataSetRQ3 <- groupDataSet %>%
+  select(state, popEst2015, avg_poverty_rate) %>%
+  mutate(
+    region = case_when(
+      state %in% c("ME", "NH", "VT", "MA", "RI", "CT", "NY", "NJ", "PA") ~ "NE",  # Northeast
+      state %in% c("OH", "IN", "IL", "MI", "WI", "MO", "IA", "MN", "ND", "SD", "NE", "KS") ~ "MW",  # Midwest
+      state %in% c("DE", "MD", "DC", "VA", "NC", "SC", "GA", "FL", "KY", "TN", "AL", "MS", "AR", "LA", "OK", "TX", "WV") ~ "S",  # South
+      state %in% c("MT", "WY", "CO", "ID", "UT", "NV", "AZ", "NM", "AK", "WA", "OR", "CA", "HI") ~ "W"  # West
+    )
+  ) %>%
+  group_by(region) %>%
+  summarise(
+    avg_poverty_rate_region = mean(avg_poverty_rate, na.rm = TRUE),  # Average poverty rate per region
+    avg_population_region = mean(popEst2015, na.rm = TRUE)  # Average population per region
+  ) %>%
+  mutate(avg_population_region = as.numeric(avg_population_region),
+         avg_poverty_rate_region = as.numeric(avg_poverty_rate_region))
+
+groupDataSetRQ3_long <- groupDataSetRQ3 %>%
+  pivot_longer(cols = c(avg_poverty_rate_region, avg_population_region),
+               names_to = "metric",
+               values_to = "value")
+
+ggplot(groupDataSetRQ3_long, aes(x = region, y = value, fill = region)) +
+  geom_col() +
+  facet_wrap(~metric, scales = "free_y") +
+  labs(
+    title = "Average Poverty Rate and Population Size per Region",
+    x = "Region",
+    y = "Value"
+  ) +
+  theme_minimal()
+
+```
+
+### RQ 04: Is there a specific area that has significantly high police brutality in the US?
+
+From our data visualization, we can see that New Mexico has a significantly high police brutality rate per 100k residents, with Alaska and Oklahoma following closely behind. This suggests that these states experience notably higher rates of police brutality compared to other states in the U.S.
+```{r, echo = FALSE, message = FALSE, warning = FALSE, results = 'hide'}
+## RQ4
+library(usmap)
+library(viridis)
+groupDataSetRQ4 <- groupDataSet %>%
+  mutate(popEst2015 = as.numeric(popEst2015),
+         killings_per_100k = (PoliceKillings / popEst2015) * 100000)
+
+plot_usmap(data = groupDataSetRQ4, values = "killings_per_100k", regions = "states") +
+  scale_fill_gradientn(colors = c("#F9FBF2", "#FFEDE1", "#D7F9FF", "#AFCBFF", "#0E1C36"), name = "Police Killings") +
+  theme_minimal() +
+  labs(title = "Police Killings per 100k Residents by State in the U.S.",
+       subtitle = "Darker states indicate higher police killings")
+```
+
+## Discussion
+
+Our findings provide evidence that socioeconomic disparities and police violence are related. We observed a moderate negative correlation between median household income and police killings (r = -0.37), suggesting that wealthier states tend to experience lower levels of police violence per capita. In contrast, we found a moderate positive correlation between poverty rates and police killings (r = 0.55), indicating that as the percentage of people living below the poverty line increases, so does the rate of police violence in a state.
+
+Additionally, we noticed that regions with larger populations tend to have higher poverty rates, supporting the idea that urban areas with larger populations often face significant income disparities. This can contribute to systemic issues such as crime, policing, and community-police interactions. We also observed that New Mexico experienced the highest rate of police violence per 100k residents, followed by Alaska and Oklahoma.
+
+These observations align with the broader notion that regions facing economic hardships—such as those with higher poverty rates—are more likely to experience social unrest, which can result in increased risk of violent police encounters. The case of New Mexico raises concerns about localized law enforcement practices and their disproportionate impact on residents.
+
+
+**Limitations of the Data:**
+
+* Data limitations: Our dataset only includes police killings record in 2015, although 2015 has been a pivotal moment in the recording of police killings, it limits the generalizability of our findings to different time periods.
+* The dataset does not provide detailed individual socioeconomic backgrounds, making it difficult to establish direct causal links between poverty and police violence on an individual scale.
+* The data relies on sources such as the Washington Post, which may not capture all instances of police killings, especially those occurring in underreported on unmonitored areas.
+* While our analysis focuses on state-level trends, variations at the city or county level may present different patterns that were not properly captured in this study.
+
+**Directions for Future Research:**
+
+* To build up on these findings future research should:
+    * Analyze police killings over multiple years to help determine trends or specific policy changes that caused social movements and a result spike in violence experienced by the residents.
+    * Including variables such as education levels, crime rates, and racial demographics for future analyses could provide a more comprehensive understanding of the factors influencing police violence.
+    * Investigating city level data would help identify urban areas where policy reforms may be most needed.
+    * Exploring how different policing policies such as body cameras, de-escalation training affect police violence rates, could provide actionable insights for policy makers.
+
+By addressing these limitations and extending our research scope, we can contribute to a more nuanced understanding of the socioeconomic factors and police violence and make a meaningful policy change to promote safer and more equitable communities.
+
+
+## Summary
+
+Our findings further highlight how marginalized communities are disproportionately impacted by police violence. This serves as a stark reminder that we are failing the most vulnerable members of our population. We hope that these results inspire policymakers, researchers, and activists to collaborate and develop solutions aimed at reforming policing practices so that marginalized groups are no longer harmed by the very system that is supposed to protect them.
+
